@@ -17,7 +17,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth - 500, windowHeight);
+  createCanvas(windowWidth / 1.3, windowHeight);
   select('canvas').position(0, 0);
 
   createP('Click the numbers in the correct order to win the game!').position(width, 0);
@@ -27,8 +27,8 @@ function setup() {
   totalNumbers = parseInt(numbersInput.value());
   numbersInput.changed(generateRandomNumbers);
 
-  input = createInput(0.5).position(width, 235).value(0.5);
   createP('Time to memorize numbers (only avaliable in hard mode): ').position(width, 200);
+  input = createInput(0.5).position(width, 280).value(0.5);
 
   createP('Game difficulty:').position(width, 140);
   select = createSelect().position(width, 180);
@@ -37,6 +37,7 @@ function setup() {
   select.option('Hard');
 
   select.changed(generateRandomNumbers);
+
 
   rows = 5;
   cols = 8;
