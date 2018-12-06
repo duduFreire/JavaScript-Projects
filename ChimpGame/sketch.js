@@ -74,7 +74,7 @@ function draw() {
       }
 
       // Shows the number inside the grid (if it is not zero).
-      grid[j][i].showNum();
+      grid[j][i].showNumber();
       // Marks already clicked-on cells as white.
       grid[j][i].highlight();
     }
