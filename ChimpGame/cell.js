@@ -16,12 +16,12 @@ class Cell {
     rect(x, y, sclX, sclY);
   }
 
-  setNum(number) {
+  setNumber(number) {
     this.number = number;
   }
 
   showNumber() {
-    if (!hide && this.number) {
+    if (!hideNumbers && this.number) {
       let x = this.i * sclX;
       let y = this.j * sclY;
 
