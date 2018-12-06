@@ -20,7 +20,7 @@ class Cell {
     this.number = number;
   }
 
-  showNum() {
+  showNumber() {
     if (!hide && this.number) {
       let x = this.i * sclX;
       let y = this.j * sclY;
