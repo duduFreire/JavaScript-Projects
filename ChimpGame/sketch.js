@@ -1,9 +1,9 @@
 let grid;
-let sclX, sclY;
+let sclX, sclY; //Width and height of grid rectangles.
 
 let picked = [];
 
-let hide = false;
+let hideNumbers = false;
 let numberOfClicks = 0;
 
 let firstTime = true;
@@ -17,6 +17,7 @@ function preload() {
 }
 
 function setup() {
+  // HTML elements to display info about the game.
   createCanvas(windowWidth / 1.3, windowHeight);
   select('canvas').position(0, 0);
 
@@ -39,13 +40,17 @@ function setup() {
   select.changed(generateRandomNumbers);
 
 
+  // Setting number of rows and cols of the grid.
   rows = 5;
   cols = 8;
 
+  // Adjusting the scale of each grid cell.
   sclX = width / cols;
   sclY = height / rows;
 
+  // Making a 2D array full of cell objects.
   grid = Array(rows).fill().map((x, j) => Array(cols).fill().map((y, i) => new Cell(j, i)));
+
   generateRandomNumbers();
 }
 
@@ -55,6 +60,7 @@ function draw() {
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
+      // Changes how the grid is shown based on the game mode.
       switch (select.value()) {
         case "Easy":
           if (grid[j][i].number) grid[j][i].show();
@@ -67,18 +73,21 @@ function draw() {
           break;
       }
 
+      // Shows the number inside the grid (if it is not zero).
       grid[j][i].showNum();
+      // Marks already clicked-on cells as white.
       grid[j][i].highlight();
     }
   }
 
+  // Shows the numbers for a set amount of then hideNumberss it.
   if (select.value() === "Hard") {
     if (firstTime) {
       time = millis();
     }
 
     if (millis() - time > input.value() * 1000) {
-      hide = true;
+      hideNumbers = true;
     }
     firstTime = false;
   }
@@ -91,10 +100,14 @@ function generateRandomNumbers() {
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
+      // Resetting the grid.
       grid[j][i].number = 0;
       grid[j][i].clicked = false;
     }
   }
+
+  // Algorithm for generating a "totalNumber" number of unique positions
+  // to display the numbers.
 
   while (picked.length < totalNumbers) {
     let randomPos = floor(random(rows * cols));
@@ -105,39 +118,40 @@ function generateRandomNumbers() {
   for (let n = 0; n < totalNumbers; n++) {
     let randomI = picked[n] % cols;
     let randomJ = floor(picked[n] / cols);
-    grid[randomJ][randomI].setNum(n + 1);
+    grid[randomJ][randomI].setNumber(n + 1);
   }
 
-  hide = false;
+  // Shows numbers after they are generated.
+  hideNumbers = false;
   numberOfClicks = 0;
 }
 
-function startGame() {
-  hide = true;
-  numberOfClicks++;
-  checkClick();
-}
-
 function mousePressed() {
+  // If the mouse is pressed within the canvas, increment numberOfClicks and hide the numbers.
   if (mouseX < width && mouseY < height) {
-    startGame();
+    hideNumbers = true;
+    numberOfClicks++;
+    checkClick();
   }
 }
 
+//Cheks if the player cliqued in the correct cell.
 function checkClick() {
   let i = floor(mouseX / sclX);
   let j = floor(mouseY / sclY);
 
   if (grid[j][i].number !== numberOfClicks) {
-    hide = false;
+    // Reset and play the fail sound when the player clicks the wrong cell.
+    hideNumbers = false;
     numberOfClicks = 0;
     fail.play();
     firstTime = true;
     generateRandomNumbers();
   } else grid[j][i].clicked = true;
 
-  if (numberOfClicks === totalNumbers && hide) {
-    hide = false;
+  if (numberOfClicks === totalNumbers && hideNumbers) {
+    // Reset and play the win sound when the player clicks all the correct cells.
+    hideNumbers = false;
     numberOfClicks = 0;
     win.play();
     firstTime = true;
