@@ -3,8 +3,9 @@ const coefficients = [];
 let terms = [];
 let scalingFactor;
 
-let t = 0.1;
-const numOfTerms = 30;
+let t = 0;
+
+const numOfTerms = 6; // Actual number of turns is 2 * numOfterms + 1;
 
 let trailX = [];
 let trailY = [];
@@ -15,34 +16,34 @@ function setup() {
 
 	scalingFactor = width / (2 * range);
 
-	for (let n = 1 - numOfTerms; n < numOfTerms; n++) {
-		if (n === 0 || n % 2 == 0) {
-			coefficients.push(new Complex());
-		} else {
-			coefficients.push(new Complex(0, -2 / (n * PI)));
-		}
+	// Calculate coefficients.
+	for (let n = -numOfTerms; n <= numOfTerms; n++) {
+		coefficients.push(coefficient(n));
 	}
 }
 
 function draw() {
 	background(51);
 
-	let i = -numOfTerms + 1;
+	// Calculate each term of the sequence.
+	// Tn = e ^ (tau * i * n * t) * Cn
 	for (let n = 0; n < coefficients.length; n++) {
-		const exponential = Complex.exp(new Complex(0, TAU * i * t));
+		const exponential = Complex.exp(new Complex(0, TAU * (n - numOfTerms) * t));
 		terms[n] = Complex.mult(exponential, coefficients[n]);
-		i++;
 	}
 
+	// Draw real and imaginary axis.
 	strokeWeight(1);
 	stroke(255);
 	line(0, height / 2, width, height / 2);
 	line(width / 2, 0, width / 2, height);
 
+	// Mouse coordinates.
 	stroke(0);
 	fill(255);
 	text(canvasToX(mouseX).toFixed(2) + ' ' + canvasToY(mouseY).toFixed(2), mouseX, mouseY);
 
+	// Draw circles and vectors.
 	let sum = new Complex();
 	let lastSum = new Complex();
 
@@ -57,11 +58,12 @@ function draw() {
 		stroke(255);
 		ellipse(xToCanvas(lastSum.real), yToCanvas(lastSum.imaginary), terms[n].getMagnitude() * scalingFactor);
 
-		stroke(100);
+		noStroke();
 		fill(0);
-		ellipse(xToCanvas(sum.real), yToCanvas(sum.imaginary), terms[n].getMagnitude() * 6.8);
+		ellipse(xToCanvas(sum.real), yToCanvas(sum.imaginary), terms[n].getMagnitude() * 6.2 + 1);
 	}
 
+	// Draw trail.
 	trailX.unshift(sum.real);
 	trailY.unshift(0);
 
@@ -97,4 +99,9 @@ function xToCanvas(x) {
 
 function yToCanvas(y) {
 	return map(y, -range, range, height, 0);
+}
+
+function coefficient(n) {
+	if (n === 0 || n % 2 === 0) return new Complex();
+	return new Complex(0, -2 / (n * PI));
 }
