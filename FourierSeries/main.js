@@ -4,7 +4,6 @@ let terms = [];
 let scalingFactor;
 
 let t = 0.1;
-
 const numOfTerms = 30;
 
 let trailX = [];
