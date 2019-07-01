@@ -43,7 +43,7 @@ class Complex {
 
 	static exp(b) {
 		const result = new Complex(Math.cos(b.imaginary), Math.sin(b.imaginary));
-		result.mult(Math.exp(b.real));
+		//result.mult(Math.exp(b.real));
 		if (Math.abs(result.imaginary) < 1e-4) result.imaginary = 0;
 		return result;
 	}
