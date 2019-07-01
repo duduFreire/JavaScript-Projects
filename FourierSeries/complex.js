@@ -33,8 +33,8 @@ class Complex {
 			result.real = a.real * b.real - a.imaginary * b.imaginary;
 			result.imaginary = tempReal * b.imaginary + a.imaginary * b.real;
 		} else {
-			result.real *= b;
-			result.imaginary *= b;
+			result.real = a.real * b;
+			result.imaginary = a.imaginary * b;
 		}
 
 		if (Math.abs(result.imaginary) < 1e-4) result.imaginary = 0;
