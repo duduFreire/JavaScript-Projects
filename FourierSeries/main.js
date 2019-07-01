@@ -1,11 +1,11 @@
-const range = 2;
+const range = 4;
 const coefficients = [];
 let terms = [];
 let scalingFactor;
 
 let t = 0;
 
-const numOfTerms = 6; // Actual number of turns is 2 * numOfterms + 1;
+const numOfTerms = 30; // Actual number of terms is 2 * numOfterms + 1;
 
 let trailX = [];
 let trailY = [];
@@ -18,7 +18,8 @@ function setup() {
 
 	// Calculate coefficients.
 	for (let n = -numOfTerms; n <= numOfTerms; n++) {
-		coefficients.push(coefficient(n));
+		//coefficients.push(stepFunction(n));
+		coefficients.push(coefficient(x => new Complex(Math.exp(x), 0), n));
 	}
 }
 
@@ -101,7 +102,20 @@ function yToCanvas(y) {
 	return map(y, -range, range, height, 0);
 }
 
-function coefficient(n) {
+function stepFunction(n) {
 	if (n === 0 || n % 2 === 0) return new Complex();
 	return new Complex(0, -2 / (n * PI));
+}
+
+function coefficient(func, n) {
+	const newFunc = k => Complex.mult(func(k), Complex.exp(new Complex(0, TAU * k * n)));
+	return integral(newFunc, 0, 1, 1e-4);
+}
+
+function integral(func, xMin, xMax, stepSize) {
+	const result = new Complex();
+	for (let i = 0; i < (xMax - xMin) / stepSize; i++) {
+		result.add(func(i * stepSize + xMin).mult(stepSize));
+	}
+	return result;
 }
