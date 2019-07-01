@@ -5,7 +5,7 @@ let scalingFactor;
 
 let t = 0;
 
-const numOfTerms = 30; // Actual number of terms is 2 * numOfterms + 1;
+const numOfTerms = 49; // Actual number of terms is 2 * numOfterms + 1;
 
 let trailX = [];
 let trailY = [];
@@ -18,8 +18,7 @@ function setup() {
 
 	// Calculate coefficients.
 	for (let n = -numOfTerms; n <= numOfTerms; n++) {
-		//coefficients.push(stepFunction(n));
-		coefficients.push(coefficient(x => new Complex(Math.exp(x), 0), n));
+		coefficients.push(stepFunction(n));
 	}
 }
 
@@ -61,7 +60,7 @@ function draw() {
 
 		noStroke();
 		fill(0);
-		ellipse(xToCanvas(sum.real), yToCanvas(sum.imaginary), terms[n].getMagnitude() * 6.2 + 1);
+		ellipse(xToCanvas(sum.real), yToCanvas(sum.imaginary), terms[n].getMagnitude() / range * 12.2 + 1);
 	}
 
 	// Draw trail.
@@ -81,8 +80,9 @@ function draw() {
 	}
 	endShape();
 
-	if (!frameRate() == 0) {
+	if (frameRate() !== 0) {
 		t += 1 / (frameRate() * 10);
+		if (t > 1) t = 0;
 	}
 }
 
